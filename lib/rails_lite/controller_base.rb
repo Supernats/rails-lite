@@ -5,7 +5,9 @@ require_relative 'session'
 class ControllerBase
   attr_reader :params
 
-  def initialize(req, res, route_params)
+  def initialize(req, res, route_params = nil)
+    @req = req
+    @res = res
   end
 
   def session
@@ -18,6 +20,8 @@ class ControllerBase
   end
 
   def render_content(content, type)
+    @res.content_type = type
+    @res.body = content
   end
 
   def render(template_name)
