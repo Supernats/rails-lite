@@ -12,6 +12,7 @@ class ControllerBase
   end
 
   def session
+    @session ||= Session.new(@req)
   end
 
   def already_rendered?
@@ -21,12 +22,14 @@ class ControllerBase
   def redirect_to(url)
     raise "Already built response" if already_rendered?
     # because standards, yo
+    @session.store_session
     @res.set_redirect(WEBrick::HTTPStatus[303], url)
     @already_built_response = true
   end
 
   def render_content(content, type)
     raise "Already built response" if already_rendered?
+    @session.store_session
     @res.content_type = type
     @res.body = content
     @already_built_response = true
