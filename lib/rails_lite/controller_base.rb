@@ -14,14 +14,18 @@ class ControllerBase
   end
 
   def already_rendered?
+    @already_built_response
   end
 
   def redirect_to(url)
+    @res.set_redirect(WEBRick::HTTPStatus::Redirect, url)
+    @already_built_response = true
   end
 
   def render_content(content, type)
     @res.content_type = type
     @res.body = content
+    @already_built_response = true
   end
 
   def render(template_name)
