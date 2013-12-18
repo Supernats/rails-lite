@@ -33,6 +33,12 @@ class ControllerBase
   end
 
   def render(template_name)
+    # Keeping with Ned's "lazy" protocol, leaving "_controller" on.
+    # For reference, name.underscore.slice(0..-12) would've done what we want.
+    controller_name = self.class.name.underscore
+    template = File.read("views/#{controller_name}/#{template_name}.html.erb")
+    content = ERB.new(template).result(binding)
+    render_content(content,"text/html")
   end
 
   def invoke_action(name)
