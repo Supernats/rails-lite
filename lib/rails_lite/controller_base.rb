@@ -8,6 +8,7 @@ class ControllerBase
   def initialize(req, res, route_params = nil)
     @req = req
     @res = res
+    @params = Params.new(@req)
     @already_built_response = false
   end
 
@@ -22,14 +23,14 @@ class ControllerBase
   def redirect_to(url)
     raise "Already built response" if already_rendered?
     # because standards, yo
-    @session.store_session(@res)
+    session.store_session(@res)
     @res.set_redirect(WEBrick::HTTPStatus[303], url)
     @already_built_response = true
   end
 
   def render_content(content, type)
     raise "Already built response" if already_rendered?
-    @session.store_session(@res)
+    session.store_session(@res)
     @res.content_type = type
     @res.body = content
     @already_built_response = true
